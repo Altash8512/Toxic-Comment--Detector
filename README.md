@@ -23,8 +23,8 @@ This project is an end-to-end machine learning application designed to identify 
 ## 🖼️ Screenshots
 
 <div align="center">
-  <img src="screenshots/out.png" width="600" alt="Web App Screenshot 1">
-  <img src="screenshots/out2.png" width="600" alt="Web App Screenshot 2">
+  <img src="screenshots/out.png" width="400" alt="Web App Screenshot 1">
+  <img src="screenshots/out2.png" width="400" alt="Web App Screenshot 2">
   <p><i>Main application interface for toxicity analysis and recommendations.</i></p>
 </div>
 
