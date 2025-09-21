@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Toxic Comment Detector</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { animation: fadeIn 1s ease-in; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-gray-900 via-purple-900 to-black text-white flex flex-col items-center justify-center min-h-screen px-6">
+
+  <!-- Header -->
+  <div class="text-center mb-8">
+    <h1 class="text-5xl font-extrabold mb-2">🛡️ Toxic Comment Detector</h1>
+    <p class="text-lg opacity-80 max-w-xl mx-auto">
+      Detect and filter toxic or hate comments in real time using AI.  
+      Type a comment below and see the magic!
+    </p>
+  </div>
+
+  <!-- Glass Card -->
+  <div class="glass-card w-full max-w-xl rounded-2xl p-6 shadow-2xl flex flex-col items-center">
+    
+    <textarea id="inputText" rows="3" class="w-full p-3 rounded-xl text-black focus:outline-none text-base" placeholder="Type something offensive or polite..."></textarea>
+    
+    <button onclick="checkToxicity()" class="mt-4 px-8 py-2.5 bg-purple-600 hover:bg-purple-700 transition rounded-xl shadow-lg font-semibold text-base">
+      🚀 Check Toxicity & Cyberbullying
+    </button>
+
+    <!-- Result Section -->
+    <div id="result" class="mt-5 text-xl font-semibold text-center transition-all"></div>
+    <div id="advice" class="mt-4 w-full text-left text-sm opacity-90"></div>
+    <div id="advice-gemini" class="mt-4 w-full text-left text-sm opacity-90"></div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="mt-12 text-center text-base opacity-80">
+    <div class="flex flex-col items-center gap-1">
+      <!-- <div class="space-x-4">
+        🔗 <a href="https://github.com/sarkar24/Toxic-Comment-Detector-Updated" target="_blank" rel="noopener noreferrer" class="underline hover:text-purple-300 transition">GitHub Repo</a> 
+        | 💻 <a href="https://drive.google.com/file/d/1tlcMZA7iFqsEo9a8n_oIAsJvzbtq2OAp/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="underline hover:text-purple-300 transition">Chrome Extension</a>
+        | 🎥 <a href="https://www.youtube.com/watch?v=MnTMe5dBzf8" target="_blank" rel="noopener noreferrer" class="underline hover:text-purple-300 transition">Chrome Extension Setup Tutorial</a>
+      </div> -->
+      <p class="mt-1 text-sm"></p>
+    </div>
+  </footer>
+
+  <script>
+    async function checkToxicity() {
+      const text = document.getElementById("inputText").value.trim();
+      const resDiv = document.getElementById("result");
+
+      if (!text) {
+        resDiv.innerText = "❗ Please enter some text!";
+        resDiv.className = "mt-6 text-xl font-semibold text-yellow-300";
+        return;
+      }
+
+      resDiv.innerText = "⏳ Checking toxicity...";
+      resDiv.className = "mt-6 text-xl font-semibold text-blue-300 animate-pulse";
+
+      try {
+        const response = await fetch("/predict", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text: text })
+        });
+
+        const data = await response.json();
+        console.log("API Response:", data);
+
+        if (!data.label || typeof data.probability !== "number") {
+          throw new Error("Invalid response");
+        }
+
+        const scorePercent = (data.probability * 100).toFixed(2);
+        resDiv.className = "mt-6 text-xl font-semibold";
+
+        let toxicityLine = data.label === "toxic"
+          ? `⚠️ <span class="text-red-400">Toxic</span> (Toxicity: ${scorePercent}%)`
+          : `✅ <span class="text-green-400">Not Toxic</span> (Confidence: ${scorePercent}%)`;
+
+        // Append cyberbullying details if provided by backend, otherwise fallback heuristic
+        let cyberLine = "";
+        let cyLabel = data.cyberbullying_label;
+        let cyScore = data.cyberbullying_score;
+        if (typeof cyLabel !== "string" || typeof cyScore !== "number") {
+          const kw = ["moron","idiot","dumb","stupid","loser","retard","kill yourself","ugly","fat","worthless","nobody likes you","i will beat you","i'll beat you","i will find you","i'll find you","go die","leave this group","no one wants you"];          
+          const lowered = text.toLowerCase();
+          const hit = kw.some(k => lowered.includes(k));
+          cyLabel = hit ? "cyberbullying" : "not cyberbullying";
+          cyScore = hit ? 0.9 : 0.1;
+        }
+        const cyberPct = (cyScore * 100).toFixed(2);
+        const isBullying = cyLabel.toLowerCase().includes("cyberbullying") && cyLabel.toLowerCase() !== "not cyberbullying";
+        const color = isBullying ? "text-orange-300" : "text-sky-300";
+        cyberLine = `<div class="mt-2 text-base opacity-90">💬 <span class="${color}">Cyberbullying:</span> ${cyLabel} (${cyberPct}%)</div>`;
+
+        resDiv.innerHTML = toxicityLine + cyberLine;
+
+        // Recommendations and rewrite (ML)
+        const adviceDiv = document.getElementById("advice");
+        const tips = Array.isArray(data.suggestions) ? data.suggestions : [];
+        const rewrite = typeof data.polite_rewrite === "string" ? data.polite_rewrite : "";
+        if (tips.length || rewrite) {
+          let tipsHtml = tips.length ? (
+            `<ul class="list-disc pl-5 mt-3 space-y-1">` +
+            tips.slice(0,5).map(t => `<li>• ${t}</li>`).join("") +
+            `</ul>`
+          ) : "";
+          let rewriteHtml = rewrite ? (
+            `<div class="mt-3 p-3 rounded-lg bg-white/10 border border-white/10"><div class="text-xs uppercase tracking-wide opacity-70">Suggested rewrite</div><div class="mt-1 text-base">${rewrite}</div></div>`
+          ) : "";
+          adviceDiv.innerHTML = tipsHtml + rewriteHtml;
+        } else {
+          adviceDiv.innerHTML = "";
+        }
+
+        // Gemini suggestions (appended after ML)
+        const adviceGem = document.getElementById("advice-gemini");
+        const gtips = Array.isArray(data.gemini_tips) ? data.gemini_tips : [];
+        const grewrite = typeof data.gemini_rewrite === "string" ? data.gemini_rewrite : "";
+        if (gtips.length || grewrite) {
+          let tipsHtml = gtips.length ? (
+            `<div class="mt-4 text-xs uppercase tracking-wide opacity-70">Tips</div>` +
+            `<ul class="list-disc pl-5 mt-2 space-y-1">` +
+            gtips.slice(0,5).map(t => `<li>• ${t}</li>`).join("") +
+            `</ul>`
+          ) : "";
+          let rewriteHtml = grewrite ? (
+            `<div class="mt-3 p-3 rounded-lg bg-white/10 border border-white/10"><div class="text-xs uppercase tracking-wide opacity-70">Rewrite</div><div class="mt-1 text-base">${grewrite}</div></div>`
+          ) : "";
+          adviceGem.innerHTML = tipsHtml + rewriteHtml;
+        } else {
+          adviceGem.innerHTML = "";
+        }
+
+      } catch (err) {
+        console.error(err);
+        resDiv.innerText = "❌ Error: Unable to connect to server or invalid response.";
+        resDiv.className = "mt-6 text-xl font-semibold text-yellow-300";
+      }
+    }
+  </script>
+</body>
+</html>
