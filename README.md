@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>🧠 Toxic Comment Detector & Recommender</h1>
+  <h1>🧠 Toxic Comment Detection & Recommendation System</h1>
   <p>
     An AI-powered system that detects toxic comments in real-time and suggests polite alternatives.
   </p>
