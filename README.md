@@ -5,19 +5,6 @@
   </p>
 </div>
 
-<a href="https://toxic-comment-detector-updated.onrender.com" target="_blank">
-  <img src="https://img.shields.io/badge/Live%20Demo-Visit-green?style=for-the-badge&logo=google-chrome" />
-</a>
-<a href="https://www.python.org/" target="_blank">
-  <img src="https://img.shields.io/badge/Python-3.12+-blue?style=for-the-badge&logo=python" />
-</a>
-<a href="https://flask.palletsprojects.com/" target="_blank">
-  <img src="https://img.shields.io/badge/Backend-Flask-orange?style=for-the-badge&logo=flask" />
-</a>
-<a href="https://huggingface.co/transformers" target="_blank">
-  <img src="https://img.shields.io/badge/ML-Transformers-yellow?style=for-the-badge&logo=huggingface" />
-</a>
-
 ---
 
 ## 🔍 Overview
@@ -27,10 +14,6 @@ This project is an end-to-end machine learning application designed to identify 
 ---
 
 ## 🌟 Key Features
-
------
------
------
 *   **Multi-Label Toxicity Detection**: Classifies comments not just as "toxic" but also analyzes them for specific sub-categories like "cyberbullying," "insult," and "threat" using a zero-shot model.
 *   **Polite Rewriter (Detoxification)**: Utilizes a fine-tuned T5 model to transform a toxic comment into a more respectful and constructive alternative.
 *   **REST API**: A Flask-based backend that exposes the models' capabilities through a simple and effective API.
@@ -40,8 +23,8 @@ This project is an end-to-end machine learning application designed to identify 
 ## 🖼️ Screenshots
 
 <div align="center">
-  <img src="screenshots/out.png" width="700" alt="Web App Screenshot 1">
-  <img src="screenshots/out2.png" width="700" alt="Web App Screenshot 2">
+  <img src="screenshots/out.png" width="600" alt="Web App Screenshot 1">
+  <img src="screenshots/out2.png" width="600" alt="Web App Screenshot 2">
   <p><i>Main application interface for toxicity analysis and recommendations.</i></p>
 </div>
 
@@ -138,10 +121,7 @@ The server will be available at `http://127.0.0.1:10000`.
 ---
 
 ## 📚 Acknowledgments
------
------
 - **Hugging Face** for the `transformers` library and model hosting.
 - The **Jigsaw/Conversation AI** team for the original dataset.
 - **Anthropic** for the helpful-harmless dataset used for rewriter training.
 - The open-source community for the powerful tools that made this project possible.
-
