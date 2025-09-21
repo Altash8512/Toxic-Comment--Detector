@@ -38,7 +38,6 @@ This project is an end-to-end machine learning application designed to identify 
 | **ML Models**     | BERT, DistilBERT, T5 (via `transformers`)  |
 | **ML Framework**  | PyTorch                                    |
 | **Data & Eval**   | Pandas, Scikit-learn, Matplotlib           |
-| **Deployment**    | Gunicorn, Render                           |
 
 ---
 
