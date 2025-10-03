@@ -1,7 +1,7 @@
 <div align="center">
   <h1>🛡️ Toxic Comment Detector & Recommender</h1>
   <p>
-    An intelligent system powered by the Google Gemini API that detects toxic, cyberbullying, and Hinglish comments in real-time and suggests polite alternatives.
+    A real-time system that uses a fast, local keyword-based classifier to detect toxic, cyberbullying, and Hinglish comments, and leverages the Google Gemini API to provide intelligent, polite alternatives.
   </p>
 </div>
 
