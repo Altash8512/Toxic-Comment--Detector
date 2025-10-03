@@ -44,12 +44,12 @@ The performance of the local keyword-based classifier was evaluated on a synthet
 ### 1. Toxicity Detection
 
 <img src="screenshots/toxicity_confusion_matrix.png" width="400" alt="Toxicity Confusion Matrix">
-<img src="screenshots/toxicity_report.png" width="400" alt="Toxicity Classification Report">
+<img src="screenshots/toxic_rep.png" width="400" alt="Toxicity Classification Report">
 
 ### 2. Cyberbullying Detection
 
 <img src="screenshots/cyberbullying_confusion_matrix.png" width="400" alt="Cyberbullying Confusion Matrix">
-<img src="screenshots/cyberbullying_report.png" width="400" alt="Cyberbullying Classification Report">
+<img src="screenshots/cyber_rep.png" width="400" alt="Cyberbullying Classification Report">
 
 ---
 
@@ -63,7 +63,7 @@ The performance of the AI-powered rewriter (Gemini API) was evaluated based on i
 ### Detoxification Success Rate
 
 <img src="screenshots/rewriter_confusion_matrix.png" width="400" alt="Rewriter Detoxification Matrix">
-<img src="screenshots/rewriter_report.png" width="400" alt="Rewriter Classification Report">
+<img src="screenshots/rewriter_rep.png" width="400" alt="Rewriter Classification Report">
 
 ---
 
