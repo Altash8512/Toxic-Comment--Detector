@@ -1,5 +1,5 @@
 import pandas as pd
-from predict import predict_comment
+from config import get_classification_from_keywords  # Use keyword-based logic
 from sklearn.metrics import accuracy_score, confusion_matrix, ConfusionMatrixDisplay, classification_report
 import matplotlib.pyplot as plt
 from tqdm import tqdm
@@ -66,7 +66,7 @@ def evaluate_model(text_column, sample_size=10000):
     for index, row in tqdm(df.iterrows(), total=df.shape[0], desc="Predicting"):
         text = row[text_column]
         
-        prediction_result = predict_comment(text)
+        prediction_result = get_classification_from_keywords(text)
         
         # --- Process Toxic Prediction ---
         pred_toxic_str = prediction_result.get("label", "non-toxic")

@@ -30,16 +30,16 @@
   <!-- Glass Card -->
   <div class="glass-card w-full max-w-xl rounded-2xl p-6 shadow-2xl flex flex-col items-center">
     
-    <textarea id="inputText" rows="3" class="w-full p-3 rounded-xl text-black focus:outline-none text-base" placeholder="Type something offensive or polite..."></textarea>
+    <textarea id="parentContext" rows="2" class="w-full p-3 rounded-xl text-black focus:outline-none text-base mb-2" placeholder="Optional: Paste the original comment here..."></textarea>
+    <textarea id="inputText" rows="3" class="w-full p-3 rounded-xl text-black focus:outline-none text-base" placeholder="Type the reply you want to check..." onkeydown="handleEnter(event)"></textarea>
     
     <button onclick="checkToxicity()" class="mt-4 px-8 py-2.5 bg-purple-600 hover:bg-purple-700 transition rounded-xl shadow-lg font-semibold text-base">
-      🚀 Check Toxicity & Cyberbullying
+      🚀 Check Reply
     </button>
 
     <!-- Result Section -->
     <div id="result" class="mt-5 text-xl font-semibold text-center transition-all"></div>
-    <div id="advice" class="mt-4 w-full text-left text-sm opacity-90"></div>
-    <div id="advice-gemini" class="mt-4 w-full text-left text-sm opacity-90"></div>
+    <div id="advice" class="mt-4 w-full text-left text-sm opacity-90"></div> <!-- Single container for all advice -->
   </div>
 
   <!-- Footer -->
@@ -55,8 +55,16 @@
   </footer>
 
   <script>
+    function handleEnter(event) {
+      // If Enter is pressed without the Shift key, prevent default newline and submit.
+      if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        checkToxicity();
+      }
+    }
     async function checkToxicity() {
       const text = document.getElementById("inputText").value.trim();
+      const parentContext = document.getElementById("parentContext").value.trim();
       const resDiv = document.getElementById("result");
 
       if (!text) {
@@ -72,7 +80,7 @@
         const response = await fetch("/predict", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text: text })
+          body: JSON.stringify({ text: text, context: parentContext })
         });
 
         const data = await response.json();
@@ -90,16 +98,8 @@
           : `✅ <span class="text-green-400">Not Toxic</span> (Confidence: ${scorePercent}%)`;
 
         // Append cyberbullying details if provided by backend, otherwise fallback heuristic
-        let cyberLine = "";
         let cyLabel = data.cyberbullying_label;
         let cyScore = data.cyberbullying_score;
-        if (typeof cyLabel !== "string" || typeof cyScore !== "number") {
-          const kw = ["moron","idiot","dumb","stupid","loser","retard","kill yourself","ugly","fat","worthless","nobody likes you","i will beat you","i'll beat you","i will find you","i'll find you","go die","leave this group","no one wants you"];          
-          const lowered = text.toLowerCase();
-          const hit = kw.some(k => lowered.includes(k));
-          cyLabel = hit ? "cyberbullying" : "not cyberbullying";
-          cyScore = hit ? 0.9 : 0.1;
-        }
         const cyberPct = (cyScore * 100).toFixed(2);
         const isBullying = cyLabel.toLowerCase().includes("cyberbullying") && cyLabel.toLowerCase() !== "not cyberbullying";
         const color = isBullying ? "text-orange-300" : "text-sky-300";
@@ -120,30 +120,19 @@
           let rewriteHtml = rewrite ? (
             `<div class="mt-3 p-3 rounded-lg bg-white/10 border border-white/10"><div class="text-xs uppercase tracking-wide opacity-70">Suggested rewrite</div><div class="mt-1 text-base">${rewrite}</div></div>`
           ) : "";
-          adviceDiv.innerHTML = tipsHtml + rewriteHtml;
+          
+          // Combine tips and rewrite into a single block
+          let finalHtml = "";
+          if (tips.length > 0) {
+            finalHtml += `<div class="mt-4 text-xs uppercase tracking-wide opacity-70">Tips</div>` + tipsHtml;
+          }
+          if (rewrite) {
+            finalHtml += rewriteHtml;
+          }
+          adviceDiv.innerHTML = finalHtml;
         } else {
           adviceDiv.innerHTML = "";
         }
-
-        // Gemini suggestions (appended after ML)
-        const adviceGem = document.getElementById("advice-gemini");
-        const gtips = Array.isArray(data.gemini_tips) ? data.gemini_tips : [];
-        const grewrite = typeof data.gemini_rewrite === "string" ? data.gemini_rewrite : "";
-        if (gtips.length || grewrite) {
-          let tipsHtml = gtips.length ? (
-            `<div class="mt-4 text-xs uppercase tracking-wide opacity-70">Tips</div>` +
-            `<ul class="list-disc pl-5 mt-2 space-y-1">` +
-            gtips.slice(0,5).map(t => `<li>• ${t}</li>`).join("") +
-            `</ul>`
-          ) : "";
-          let rewriteHtml = grewrite ? (
-            `<div class="mt-3 p-3 rounded-lg bg-white/10 border border-white/10"><div class="text-xs uppercase tracking-wide opacity-70">Rewrite</div><div class="mt-1 text-base">${grewrite}</div></div>`
-          ) : "";
-          adviceGem.innerHTML = tipsHtml + rewriteHtml;
-        } else {
-          adviceGem.innerHTML = "";
-        }
-
       } catch (err) {
         console.error(err);
         resDiv.innerText = "❌ Error: Unable to connect to server or invalid response.";

@@ -1,24 +1,17 @@
 <div align="center">
-  <h1>🧠 Toxic Comment Detection & Recommendation System</h1>
+  <h1>🛡️ Toxic Comment Detector & Recommender</h1>
   <p>
-    An AI-powered system that detects toxic comments in real-time and suggests polite alternatives.
+    An intelligent system powered by the Google Gemini API that detects toxic, cyberbullying, and Hinglish comments in real-time and suggests polite alternatives.
   </p>
 </div>
 
 ---
 
-## 🔍 Overview
-
-This project is an end-to-end machine learning application designed to identify and mitigate toxicity in online conversations. It features a robust backend that serves multiple fine-tuned models for real-time analysis and content recommendation.
-
----
-
 ## 🌟 Key Features
-*   **Multi-Label Toxicity Detection**: Classifies comments not just as "toxic" but also analyzes them for specific sub-categories like "cyberbullying," "insult," and "threat" using a zero-shot model.
-*   **Polite Rewriter (Detoxification)**: Utilizes a fine-tuned T5 model to transform a toxic comment into a more respectful and constructive alternative.
-*   **REST API**: A Flask-based backend that exposes the models' capabilities through a simple and effective API.
-*   **Comprehensive Evaluation Suite**: Includes scripts to measure the performance of both the detection and rewriting models, generating classification reports and confusion matrices.
-*   **Local Model Caching**: Automatically downloads and saves models locally for faster startup times and offline use.
+*   **Real-Time Detection**: Uses a fast, local keyword-based classifier for instant feedback on toxic, cyberbullying, and Hinglish language.
+*   **Contextual Understanding**: Intelligently assesses if a reply is toxic based on the parent comment it's responding to.
+*   **AI-Powered Rewrites**: Leverages the Google Gemini API to provide high-quality, polite alternative phrasings for toxic comments.
+*   **Hinglish Support**: Natively understands and processes Hinglish (Hindi + English) for both detection and rewriting.
 
 ## 🖼️ Screenshots
 
@@ -30,41 +23,13 @@ This project is an end-to-end machine learning application designed to identify 
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠️ Technology Stack
 
-| Layer             | Technology                                 |
-|:------------------|:-------------------------------------------|
-| **Backend**       | Flask (Python)                             |
-| **ML Models**     | BERT, DistilBERT, T5 (via `transformers`)  |
-| **ML Framework**  | PyTorch                                    |
-| **Data & Eval**   | Pandas, Scikit-learn, Matplotlib           |
-
----
-
-## 📊 Model Performance & Evaluation
-
-The models were evaluated on a sampled subset of the Kaggle "Toxic Comment Classification Challenge" dataset.
-
-### 1. Detection Model Performance
-
-#### General Toxicity (`toxic` or `severe_toxic`)
-This measures the primary model's ability to identify any form of general toxicity.
-
-<img src="screenshots/final rep.png" width="400" alt="General Toxicity Classification Report">
-<img src="screenshots/final.png" width="400" alt="General Toxicity Confusion Matrix">
-
-#### Cyberbullying (`insult` or `threat`)
-This measures the zero-shot model's ability to identify specific cyberbullying behaviors.
-
-<img src="screenshots/final2 rep.png" width="400" alt="Cyberbullying Classification Report">
-<img src="screenshots/final2.png" width="400" alt="Cyberbullying Confusion Matrix">
-
-### 2. Rewriter Model Performance
-
-The rewriter model was evaluated on its ability to convert a toxic comment into a non-toxic one. The success rate (accuracy) reflects the percentage of successful conversions.
-
-<img src="screenshots/final3 rep.png" width="400" alt="Rewriter Classification Report">
-<img src="screenshots/final3.png" width="400" alt="Rewriter Confusion Matrix">
+| Layer             | Technology                                   |
+|:------------------|:---------------------------------------------|
+| **Web Backend**   | Flask (Python)                               |
+| **AI Service**    | Google Gemini API                            |
+| **Frontend**      | HTML, Tailwind CSS, JavaScript               |
 
 ---
 
@@ -73,13 +38,12 @@ The rewriter model was evaluated on its ability to convert a toxic comment into 
 Follow these steps to run the project locally.
 
 ### 1. Prerequisites
-- Python 3.10+
-- `pip` and `venv`
+- Python 3.10 or newer
 
 ### 2. Clone the Repository
 ```bash
-git clone https://github.com/Altash8512/Toxic-Comment--Detector.git
-cd Toxic-Comment--Detector
+git clone https://github.com/Altamash13/Toxic-Comment-Detector-Updated.git
+cd Toxic-Comment-Detector-Updated-main
 ```
 
 ### 3. Set Up Virtual Environment
@@ -99,17 +63,8 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 5. Download & Prepare Models
-The application can download models on first run, but it's recommended to prepare them beforehand.
-
-```bash
-# Download the detection models
-python save_local_model.py
-python save_cyber_model.py
-
-# Train the rewriter model (this may take some time)
-python train_rewriter.py
-```
+### 5. Configure Environment Variables 
++Create a .env file in the root directory of the project and add your Google Gemini API key. This is required for the AI-powered rewrite suggestions.
 
 ### 6. Run the Application
 ```bash
@@ -118,9 +73,3 @@ python app.py
 The server will be available at `http://127.0.0.1:10000`.
 
 ---
-
-## 📚 Acknowledgments
-- **Hugging Face** for the `transformers` library and model hosting.
-- The **Jigsaw/Conversation AI** team for the original dataset.
-- **Anthropic** for the helpful-harmless dataset used for rewriter training.
-- The open-source community for the powerful tools that made this project possible.
