@@ -44,32 +44,26 @@ The performance of the local keyword-based classifier was evaluated on a synthet
 ### 1. Toxicity Detection
 
 <img src="screenshots/toxicity_confusion_matrix.png" width="400" alt="Toxicity Confusion Matrix">
-
-```
-              precision    recall  f1-score   support
-
-   Not Toxic       0.96      0.98      0.97       815
-       Toxic       0.89      0.82      0.85       185
-
-    accuracy                           0.95      1000
-   macro avg       0.92      0.90      0.91      1000
-weighted avg       0.95      0.95      0.95      1000
-```
+<img src="screenshots/toxicity_report.png" width="400" alt="Toxicity Classification Report">
 
 ### 2. Cyberbullying Detection
 
 <img src="screenshots/cyberbullying_confusion_matrix.png" width="400" alt="Cyberbullying Confusion Matrix">
+<img src="screenshots/cyberbullying_report.png" width="400" alt="Cyberbullying Classification Report">
 
-```
-                   precision    recall  f1-score   support
+---
 
-Not Cyberbullying       0.98      0.99      0.98       808
-    Cyberbullying       0.93      0.88      0.90       192
+## 🚀 Rewriter Performance
 
-         accuracy                           0.97      1000
-        macro avg       0.95      0.93      0.f94      1000
-     weighted avg       0.97      0.97      0.97      1000
-```
+The performance of the AI-powered rewriter (Gemini API) was evaluated based on its ability to "detoxify" a comment. The following metrics represent a simulation run on 200 toxic comments to measure the success rate.
+
+> **To generate this report yourself:**
+> Run `python generate_rewriter_report.py` to create the report and confusion matrix image.
+
+### Detoxification Success Rate
+
+<img src="screenshots/rewriter_confusion_matrix.png" width="400" alt="Rewriter Detoxification Matrix">
+<img src="screenshots/rewriter_report.png" width="400" alt="Rewriter Classification Report">
 
 ---
 
